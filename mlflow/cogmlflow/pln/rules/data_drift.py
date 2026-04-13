@@ -114,10 +114,11 @@ class DataDriftRule(PLNRule):
                 break
 
         # If params unchanged and metric degraded → data drift
-        if not params_changed:
-            strength = min(0.5 + delta, 1.0)
-        else:
-            strength = min(0.3 + delta * 0.5, 0.7)
+        strength = (
+            min(0.5 + delta, 1.0)
+            if not params_changed
+            else min(0.3 + delta * 0.5, 0.7)
+        )
 
         ref_node = atomspace.add(ConceptNode(run_node_name(self._ref)))
         comp_node = atomspace.add(ConceptNode(run_node_name(self._comp)))

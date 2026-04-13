@@ -42,7 +42,7 @@ from typing import Any, Callable
 
 from mlflow.cogmlflow.atomspace.tracking_store import AtomSpaceTrackingStore
 from mlflow.cogmlflow.entities.atomspace import AtomSpace
-from mlflow.cogmlflow.orchestrator.goal_system import CogMLflowGoalSystem
+from mlflow.cogmlflow.orchestrator.goal_system import CogMlflowGoalSystem, Goal
 from mlflow.cogmlflow.orchestrator.scheduler import CognitiveScheduler, ExperimentCandidate
 from mlflow.cogmlflow.pln.engine import PLNEngine
 from mlflow.cogmlflow.pln.rules import (
@@ -95,9 +95,9 @@ class AutoResearcher:
     def __init__(
         self,
         store: AtomSpaceTrackingStore,
-        runner: Callable[[dict], dict],
-        goals: list | None = None,
-        initial_configs: list[dict] | None = None,
+        runner: Callable[[dict[str, object]], dict[str, object]],
+        goals: list[Goal] | None = None,
+        initial_configs: list[dict[str, object]] | None = None,
         n_iterations: int = 20,
         pln_steps: int = 2,
         primary_metric: str = "accuracy",
@@ -116,7 +116,7 @@ class AutoResearcher:
         self._as: AtomSpace = store.atomspace
 
         # Goal system
-        self._goal_system = CogMLflowGoalSystem()
+        self._goal_system = CogMlflowGoalSystem()
         for goal in goals or []:
             self._goal_system.add_goal(goal)
 
@@ -146,7 +146,7 @@ class AutoResearcher:
     # OODA phases
     # ------------------------------------------------------------------
 
-    def _observe(self, candidate_id: str, metrics: dict) -> None:
+    def _observe(self, candidate_id: str, metrics: dict[str, object]) -> None:
         """Ingest run results into the AtomSpace."""
         onto = self._store.translator._onto
         for key, value in metrics.items():
@@ -166,7 +166,7 @@ class AutoResearcher:
         """Select the next experiment using ECAN + goal system."""
         return self._scheduler.select_next()
 
-    def _act(self, candidate: ExperimentCandidate) -> dict:
+    def _act(self, candidate: ExperimentCandidate) -> dict[str, object]:
         """Execute the chosen experiment and return its metrics."""
         _log.debug(
             "[OODA act] Running candidate %s with config %s",

@@ -16,13 +16,13 @@ from mlflow.cogmlflow.entities.atom import (
 )
 from mlflow.cogmlflow.entities.atomspace import AtomSpace
 from mlflow.cogmlflow.entities.ontology import (
-    CogMLflowOntology,
+    CogMlflowOntology,
     experiment_node_name,
     run_node_name,
 )
 
 
-class MLflowAtomTranslator:
+class MlflowAtomTranslator:
     """Translates between MLflow entity objects and AtomSpace atoms.
 
     This class owns a single AtomSpace and an ontology helper, and provides
@@ -31,7 +31,7 @@ class MLflowAtomTranslator:
 
     def __init__(self, atomspace: AtomSpace | None = None) -> None:
         self._as = atomspace if atomspace is not None else AtomSpace("mlflow")
-        self._onto = CogMLflowOntology(self._as)
+        self._onto = CogMlflowOntology(self._as)
 
     @property
     def atomspace(self) -> AtomSpace:
@@ -108,12 +108,12 @@ class MLflowAtomTranslator:
     # Read (AtomSpace → dicts)
     # ------------------------------------------------------------------
 
-    def read_experiment(self, experiment_id: str) -> dict:
+    def read_experiment(self, experiment_id: str) -> dict[str, object]:
         """Return a dict representation of an experiment from the AtomSpace."""
         node = self._as.get(ConceptNode(experiment_node_name(experiment_id)))
         if node is None:
             return {}
-        result: dict = {"experiment_id": experiment_id}
+        result: dict[str, object] = {"experiment_id": experiment_id}
         for link in self._as.get_incoming(node):
             if not isinstance(link, EvaluationLink):
                 continue
@@ -131,9 +131,9 @@ class MLflowAtomTranslator:
                     result["creation_time"] = args.outgoing[1].value
         return result
 
-    def read_run(self, run_id: str) -> dict:
+    def read_run(self, run_id: str) -> dict[str, object]:
         """Return a dict representation of a run from the AtomSpace."""
-        result: dict = {
+        result: dict[str, object] = {
             "run_id": run_id,
             "metrics": dict(self._onto.get_run_metrics(run_id)),
             "params": dict(self._onto.get_run_params(run_id)),

@@ -8,10 +8,10 @@ evolutionary hyperparameter search.
 
 Quick start::
 
-    from mlflow.cogmlflow import CogMLflowClient
+    from mlflow.cogmlflow import CogMlflowClient
     from mlflow.cogmlflow.orchestrator import accuracy_goal
 
-    client = CogMLflowClient()
+    client = CogMlflowClient()
     exp_id = client.create_experiment("my_experiment")
 
     # Log some runs
@@ -52,15 +52,15 @@ Integration modes
 
       delegate = FileStore("/tmp/mlruns")
       shadow_store = AtomSpaceTrackingStore(delegate=delegate)
-      client = CogMLflowClient(store=shadow_store)
+      client = CogMlflowClient(store=shadow_store)
 """
 
-from mlflow.cogmlflow.atomspace import AtomSpaceTrackingStore, MLflowAtomTranslator
-from mlflow.cogmlflow.client import CogMLflowClient
+from mlflow.cogmlflow.atomspace import AtomSpaceTrackingStore, MlflowAtomTranslator
+from mlflow.cogmlflow.client import CogMlflowClient
 from mlflow.cogmlflow.ecan import AttentionValue, ECANAttentionBank, ExperimentAttentionManager
 from mlflow.cogmlflow.entities import (
     AtomSpace,
-    CogMLflowOntology,
+    CogMlflowOntology,
     ConceptNode,
     EvaluationLink,
     ImplicationLink,
@@ -75,7 +75,7 @@ from mlflow.cogmlflow.entities import (
 from mlflow.cogmlflow.moses import HyperparamSpace, Individual, MosesHyperparamOptimizer
 from mlflow.cogmlflow.orchestrator import (
     AutoResearcher,
-    CogMLflowGoalSystem,
+    CogMlflowGoalSystem,
     CognitiveScheduler,
     ExperimentCandidate,
     Goal,
@@ -98,10 +98,10 @@ from mlflow.cogmlflow.suggestion_engine import CognitiveSuggestionEngine, Sugges
 
 __all__ = [
     # Client
-    "CogMLflowClient",
+    "CogMlflowClient",
     # Entities
     "AtomSpace",
-    "CogMLflowOntology",
+    "CogMlflowOntology",
     "ConceptNode",
     "PredicateNode",
     "NumberNode",
@@ -114,7 +114,7 @@ __all__ = [
     "TruthValue",
     # AtomSpace store
     "AtomSpaceTrackingStore",
-    "MLflowAtomTranslator",
+    "MlflowAtomTranslator",
     # PLN
     "PLNEngine",
     "PLNRule",
@@ -134,7 +134,7 @@ __all__ = [
     "MosesHyperparamOptimizer",
     # Orchestrator
     "AutoResearcher",
-    "CogMLflowGoalSystem",
+    "CogMlflowGoalSystem",
     "CognitiveScheduler",
     "ExperimentCandidate",
     "Goal",

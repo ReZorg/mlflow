@@ -29,7 +29,7 @@ from mlflow.cogmlflow.entities.atom import (
     VariableNode,
 )
 from mlflow.cogmlflow.entities.atomspace import AtomSpace
-from mlflow.cogmlflow.entities.ontology import CogMLflowOntology, bootstrap_ontology
+from mlflow.cogmlflow.entities.ontology import CogMlflowOntology, bootstrap_ontology
 
 __all__ = [
     # Atom types
@@ -63,6 +63,6 @@ __all__ = [
     # AtomSpace
     "AtomSpace",
     # Ontology
-    "CogMLflowOntology",
+    "CogMlflowOntology",
     "bootstrap_ontology",
 ]

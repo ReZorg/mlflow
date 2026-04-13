@@ -1,5 +1,5 @@
 """
-CogMLflowClient — the public API for CogMLflow.
+CogMlflowClient — the public API for CogMLflow.
 
 Extends ``mlflow.tracking.MlflowClient`` with cognitive capabilities:
 * Cognitive experiment recommendations
@@ -11,9 +11,9 @@ Extends ``mlflow.tracking.MlflowClient`` with cognitive capabilities:
 
 Usage::
 
-    from mlflow.cogmlflow.client import CogMLflowClient
+    from mlflow.cogmlflow.client import CogMlflowClient
 
-    client = CogMLflowClient()
+    client = CogMlflowClient()
     exp_id = client.create_experiment("my_experiment")
 
     # Run cognitive analysis
@@ -33,21 +33,23 @@ Usage::
 from __future__ import annotations
 
 import logging
+import time as _time
 from typing import Callable
 
 from mlflow.cogmlflow.atomspace.tracking_store import AtomSpaceTrackingStore
 from mlflow.cogmlflow.ecan.attention import ExperimentAttentionManager
 from mlflow.cogmlflow.entities.atomspace import AtomSpace
 from mlflow.cogmlflow.moses.optimizer import HyperparamSpace, Individual, MosesHyperparamOptimizer
-from mlflow.cogmlflow.orchestrator.goal_system import CogMLflowGoalSystem, Goal
+from mlflow.cogmlflow.orchestrator.goal_system import CogMlflowGoalSystem, Goal
 from mlflow.cogmlflow.orchestrator.ooda_loop import AutoResearcher
 from mlflow.cogmlflow.pln.engine import PLNEngine
 from mlflow.cogmlflow.suggestion_engine import CognitiveSuggestionEngine, Suggestion
+from mlflow.entities import Metric, Param, RunTag
 
 _log = logging.getLogger(__name__)
 
 
-class CogMLflowClient:
+class CogMlflowClient:
     """High-level client for CogMLflow cognitive capabilities.
 
     Parameters
@@ -78,7 +80,7 @@ class CogMLflowClient:
 
         self._as: AtomSpace = self._store.atomspace
         self._attention_mgr = ExperimentAttentionManager(self._as)
-        self._goal_system = CogMLflowGoalSystem()
+        self._goal_system = CogMlflowGoalSystem()
 
     # ------------------------------------------------------------------
     # Internal helpers
@@ -104,31 +106,21 @@ class CogMLflowClient:
         return self._store.get_experiment(experiment_id)
 
     def create_run(self, experiment_id: str, tags=None, run_name: str = ""):
-        import time
-
         return self._store.create_run(
             experiment_id=experiment_id,
             user_id="cogmlflow",
-            start_time=int(time.time() * 1000),
+            start_time=int(_time.time() * 1000),
             tags=tags or [],
             run_name=run_name,
         )
 
     def log_metric(self, run_id: str, key: str, value: float, step: int = 0) -> None:
-        import time
-
-        from mlflow.entities import Metric
-
-        self._store.log_metric(run_id, Metric(key, value, int(time.time() * 1000), step))
+        self._store.log_metric(run_id, Metric(key, value, int(_time.time() * 1000), step))
 
     def log_param(self, run_id: str, key: str, value: str) -> None:
-        from mlflow.entities import Param
-
         self._store.log_param(run_id, Param(key, str(value)))
 
     def set_tag(self, run_id: str, key: str, value: str) -> None:
-        from mlflow.entities import RunTag
-
         self._store.set_tag(run_id, RunTag(key, str(value)))
 
     def get_run(self, run_id: str):
@@ -202,15 +194,15 @@ class CogMLflowClient:
         """
         return self._attention_mgr.get_priority_queue(top_k=top_k)
 
-    def add_goal(self, goal: Goal) -> "CogMLflowClient":
+    def add_goal(self, goal: Goal) -> "CogMlflowClient":
         """Register a research goal with the client's goal system."""
         self._goal_system.add_goal(goal)
         return self
 
     def tune(
         self,
-        space: dict[str, dict],
-        objective: Callable[[dict], float],
+        space: dict[str, dict[str, object]],
+        objective: Callable[[dict[str, object]], float],
         population_size: int = 20,
         n_generations: int = 10,
         seed: int | None = None,
@@ -249,8 +241,8 @@ class CogMLflowClient:
 
     def auto_research(
         self,
-        runner: Callable[[dict], dict],
-        initial_configs: list[dict] | None = None,
+        runner: Callable[[dict[str, object]], dict[str, object]],
+        initial_configs: list[dict[str, object]] | None = None,
         n_iterations: int = 20,
         primary_metric: str = "accuracy",
         **kwargs,
@@ -288,7 +280,7 @@ class CogMLflowClient:
             **kwargs,
         )
 
-    def run_pln(self, steps: int = 1) -> list:
+    def run_pln(self, steps: int = 1) -> list[object]:
         """Run PLN forward chaining directly on the AtomSpace.
 
         Returns the list of new ``InferenceResult`` objects derived.
@@ -307,9 +299,9 @@ class CogMLflowClient:
         return self._store
 
     @property
-    def goal_system(self) -> CogMLflowGoalSystem:
+    def goal_system(self) -> CogMlflowGoalSystem:
         """The client's goal system."""
         return self._goal_system
 
     def __repr__(self) -> str:
-        return f"CogMLflowClient(atomspace_size={len(self._as)})"
+        return f"CogMlflowClient(atomspace_size={len(self._as)})"

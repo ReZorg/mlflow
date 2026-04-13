@@ -36,9 +36,9 @@ class Goal:
     name: str
     description: str = ""
     desirability: float = 0.5
-    predicate: Callable[[dict], float] | None = field(default=None, repr=False)
+    predicate: Callable[[dict[str, object]], float] | None = field(default=None, repr=False)
 
-    def evaluate(self, run_metrics: dict) -> float:
+    def evaluate(self, run_metrics: dict[str, object]) -> float:
         """Return the goal-fulfilment score for a run (0 = no progress, 1 = full)."""
         if self.predicate is None:
             return 0.0
@@ -48,12 +48,12 @@ class Goal:
         self.desirability = max(0.0, min(1.0, new_desirability))
 
 
-class CogMLflowGoalSystem:
+class CogMlflowGoalSystem:
     """Manages a prioritised set of cognitive goals.
 
     Usage::
 
-        goals = CogMLflowGoalSystem()
+        goals = CogMlflowGoalSystem()
         goals.add_goal(
             Goal(
                 name="maximize_accuracy",
@@ -76,7 +76,7 @@ class CogMLflowGoalSystem:
     def __init__(self) -> None:
         self._goals: dict[str, Goal] = {}
 
-    def add_goal(self, goal: Goal) -> "CogMLflowGoalSystem":
+    def add_goal(self, goal: Goal) -> "CogMlflowGoalSystem":
         """Register a goal.  Returns self for chaining."""
         self._goals[goal.name] = goal
         return self
@@ -87,7 +87,7 @@ class CogMLflowGoalSystem:
     def get_goal(self, name: str) -> Goal | None:
         return self._goals.get(name)
 
-    def score_run(self, run_metrics: dict) -> float:
+    def score_run(self, run_metrics: dict[str, object]) -> float:
         """Return the weighted sum of goal fulfilments for a run.
 
         Returns a value in [0, 1] representing how well the run satisfies the
@@ -117,7 +117,7 @@ class CogMLflowGoalSystem:
 
     def __repr__(self) -> str:
         goal_str = ", ".join(f"{g.name}={g.desirability:.2f}" for g in self._goals.values())
-        return f"CogMLflowGoalSystem([{goal_str}])"
+        return f"CogMlflowGoalSystem([{goal_str}])"
 
 
 # ---------------------------------------------------------------------------

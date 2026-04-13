@@ -108,7 +108,7 @@ class Atom:
         return self
 
     # Subclasses must implement these for identity and hashing
-    def _identity_key(self) -> tuple:
+    def _identity_key(self) -> tuple[object, ...]:
         raise NotImplementedError
 
     def __eq__(self, other: object) -> bool:
@@ -143,7 +143,7 @@ class Node(Atom):
     def name(self) -> str:
         return self._name
 
-    def _identity_key(self) -> tuple:
+    def _identity_key(self) -> tuple[object, ...]:
         return (self._name,)
 
     def __repr__(self) -> str:
@@ -212,7 +212,7 @@ class Link(Atom):
     def outgoing(self) -> tuple[Atom, ...]:
         return self._outgoing
 
-    def _identity_key(self) -> tuple:
+    def _identity_key(self) -> tuple[object, ...]:
         return tuple(hash(a) for a in self._outgoing)
 
     def __repr__(self) -> str:

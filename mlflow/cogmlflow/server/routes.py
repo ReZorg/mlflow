@@ -119,7 +119,7 @@ if _FASTAPI_AVAILABLE:
         def schedule_experiment(request: ScheduleRequest):
             if scheduler is None:
                 raise HTTPException(status_code=503, detail="Scheduler not configured")
-            candidate = scheduler.add_candidate(
+            scheduler.add_candidate(
                 candidate_id=request.candidate_id,
                 config=request.config,
                 experiment_id=request.experiment_id,

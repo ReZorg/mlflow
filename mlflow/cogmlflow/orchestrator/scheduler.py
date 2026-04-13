@@ -28,7 +28,7 @@ from mlflow.cogmlflow.entities.atom import (
 )
 from mlflow.cogmlflow.entities.atomspace import AtomSpace
 from mlflow.cogmlflow.entities.ontology import run_node_name
-from mlflow.cogmlflow.orchestrator.goal_system import CogMLflowGoalSystem
+from mlflow.cogmlflow.orchestrator.goal_system import CogMlflowGoalSystem
 
 
 @dataclass
@@ -66,14 +66,14 @@ class CognitiveScheduler:
     def __init__(
         self,
         atomspace: AtomSpace,
-        goal_system: CogMLflowGoalSystem | None = None,
+        goal_system: CogMlflowGoalSystem | None = None,
         attention_manager: ExperimentAttentionManager | None = None,
         epsilon: float = 0.1,
         ucb_c: float = 1.0,
         seed: int | None = None,
     ) -> None:
         self._as = atomspace
-        self._goal_system = goal_system or CogMLflowGoalSystem()
+        self._goal_system = goal_system or CogMlflowGoalSystem()
         self._attention = attention_manager or ExperimentAttentionManager(atomspace)
         self._epsilon = epsilon
         self._ucb_c = ucb_c
@@ -177,16 +177,15 @@ class CognitiveScheduler:
             return self._rng.choice(candidates)
 
         # UCB-based selection
-        best = max(
+        return max(
             candidates,
             key=lambda c: self._ucb_score(c) if self._total_runs > 0 else self._score_candidate(c),
         )
-        return best
 
     def record_result(
         self,
         candidate_id: str,
-        metrics: dict,
+        metrics: dict[str, object],
         success: bool = True,
     ) -> None:
         """Update scheduler state after an experiment completes.

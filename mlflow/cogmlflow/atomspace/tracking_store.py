@@ -32,7 +32,7 @@ from __future__ import annotations
 import time
 import uuid
 
-from mlflow.cogmlflow.atomspace.translator import MLflowAtomTranslator
+from mlflow.cogmlflow.atomspace.translator import MlflowAtomTranslator
 from mlflow.cogmlflow.entities.atom import ConceptNode, EvaluationLink, ListLink, PredicateNode
 from mlflow.cogmlflow.entities.atomspace import AtomSpace
 from mlflow.cogmlflow.entities.ontology import (
@@ -77,7 +77,7 @@ class AtomSpaceTrackingStore(AbstractStore):
         super().__init__()
         self._delegate = delegate
         self._as = atomspace if atomspace is not None else AtomSpace("cogmlflow")
-        self._translator = MLflowAtomTranslator(self._as)
+        self._translator = MlflowAtomTranslator(self._as)
         self._onto = self._translator._onto
         # Native-mode in-memory stores
         self._experiments: dict[str, Experiment] = {}
@@ -189,8 +189,7 @@ class AtomSpaceTrackingStore(AbstractStore):
     def delete_experiment(self, experiment_id: str) -> None:
         if self._delegate:
             self._delegate.delete_experiment(experiment_id)
-        exp = self._experiments.get(str(experiment_id))
-        if exp:
+        if exp := self._experiments.get(str(experiment_id)):
             exp._lifecycle_stage = LifecycleStage.DELETED
             # Update AtomSpace
             node = self._as.get(ConceptNode(experiment_node_name(str(experiment_id))))
@@ -269,8 +268,7 @@ class AtomSpaceTrackingStore(AbstractStore):
 
     def update_run_info(self, run_id: str, run_status, end_time, run_name: str) -> RunInfo:
         if self._delegate:
-            info = self._delegate.update_run_info(run_id, run_status, end_time, run_name)
-            return info
+            return self._delegate.update_run_info(run_id, run_status, end_time, run_name)
         run = self._runs.get(run_id)
         if run is None:
             raise MlflowException(f"Run {run_id!r} does not exist.", RESOURCE_DOES_NOT_EXIST)
@@ -426,6 +424,6 @@ class AtomSpaceTrackingStore(AbstractStore):
         return self._as
 
     @property
-    def translator(self) -> MLflowAtomTranslator:
+    def translator(self) -> MlflowAtomTranslator:
         """Access the MLflow ↔ AtomSpace translator."""
         return self._translator

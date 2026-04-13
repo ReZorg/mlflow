@@ -1,6 +1,6 @@
 """CogMLflow atomspace package."""
 
 from mlflow.cogmlflow.atomspace.tracking_store import AtomSpaceTrackingStore
-from mlflow.cogmlflow.atomspace.translator import MLflowAtomTranslator
+from mlflow.cogmlflow.atomspace.translator import MlflowAtomTranslator
 
-__all__ = ["MLflowAtomTranslator", "AtomSpaceTrackingStore"]
+__all__ = ["MlflowAtomTranslator", "AtomSpaceTrackingStore"]

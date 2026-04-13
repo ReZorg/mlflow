@@ -95,7 +95,7 @@ class InferenceResult:
     tv: TruthValue = field(default_factory=lambda: TruthValue(1.0, 0.0))
     explanation: str = ""
 
-    def to_dict(self) -> dict:
+    def to_dict(self) -> dict[str, object]:
         return {
             "rule": self.rule_name,
             "conclusion": repr(self.conclusion),

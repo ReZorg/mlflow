@@ -1,7 +1,7 @@
 """CogMLflow orchestrator package."""
 
 from mlflow.cogmlflow.orchestrator.goal_system import (
-    CogMLflowGoalSystem,
+    CogMlflowGoalSystem,
     Goal,
     accuracy_goal,
     latency_goal,
@@ -14,7 +14,7 @@ from mlflow.cogmlflow.orchestrator.scheduler import (
 )
 
 __all__ = [
-    "CogMLflowGoalSystem",
+    "CogMlflowGoalSystem",
     "Goal",
     "accuracy_goal",
     "latency_goal",

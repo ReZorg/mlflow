@@ -32,11 +32,11 @@ class TestTruthValue:
         assert tv.confidence == 0.9
 
     def test_out_of_range_strength_raises(self):
-        with pytest.raises(ValueError):
+        with pytest.raises(ValueError, match="strength"):
             TruthValue(1.5, 0.5)
 
     def test_out_of_range_confidence_raises(self):
-        with pytest.raises(ValueError):
+        with pytest.raises(ValueError, match="confidence"):
             TruthValue(0.5, -0.1)
 
     def test_revision_combines_tv(self):
@@ -50,7 +50,7 @@ class TestTruthValue:
 
     def test_immutability(self):
         tv = TruthValue(0.5, 0.5)
-        with pytest.raises(Exception):
+        with pytest.raises(AttributeError, match="cannot|has no setter"):
             tv.strength = 0.9  # frozen dataclass
 
 
@@ -70,7 +70,7 @@ class TestNodes:
         assert ConceptNode("a") != ConceptNode("b")
 
     def test_node_requires_str_name(self):
-        with pytest.raises(TypeError):
+        with pytest.raises(TypeError, match="str"):
             ConceptNode(123)
 
     def test_number_node_value(self):
@@ -197,7 +197,7 @@ class TestAtomSpace:
 
     def test_pattern_match_ground_node(self):
         space = AtomSpace()
-        node = space.add(ConceptNode("match_me"))
+        space.add(ConceptNode("match_me"))
         results = space.pattern_match(ConceptNode("match_me"))
         assert len(results) == 1
 

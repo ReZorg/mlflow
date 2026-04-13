@@ -38,13 +38,15 @@ from mlflow.cogmlflow.pln.rules import (
 class Suggestion:
     """A single actionable recommendation produced by the suggestion engine."""
 
-    kind: str  # "promote_model" | "investigate_overfitting" | "tune_hyperparam" | "similar_experiment"
+    # "promote_model" | "investigate_overfitting" |
+    # "tune_hyperparam" | "similar_experiment"
+    kind: str
     run_id: str
     confidence: float
     message: str
     supporting_inferences: list[InferenceResult] = field(default_factory=list)
 
-    def to_dict(self) -> dict:
+    def to_dict(self) -> dict[str, object]:
         return {
             "kind": self.kind,
             "run_id": self.run_id,
@@ -230,9 +232,9 @@ class CognitiveSuggestionEngine:
 
         Similarity is computed as the cosine similarity of metric vectors.
         """
-        from mlflow.cogmlflow.atomspace.translator import MLflowAtomTranslator
+        from mlflow.cogmlflow.atomspace.translator import MlflowAtomTranslator
 
-        translator = MLflowAtomTranslator(self._as)
+        translator = MlflowAtomTranslator(self._as)
         target_metrics = dict(translator._onto.get_run_metrics(run_id))
         if not target_metrics:
             return []

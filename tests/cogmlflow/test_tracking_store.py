@@ -25,7 +25,7 @@ class TestExperimentOps:
 
     def test_duplicate_experiment_name_raises(self, store):
         store.create_experiment("dup", "", [])
-        with pytest.raises(MlflowException):
+        with pytest.raises(MlflowException, match="already exists"):
             store.create_experiment("dup", "", [])
 
     def test_get_experiment_by_name(self, store):
@@ -35,7 +35,7 @@ class TestExperimentOps:
         assert exp.name == "named_exp"
 
     def test_get_nonexistent_experiment_raises(self, store):
-        with pytest.raises(MlflowException):
+        with pytest.raises(MlflowException, match="does not exist"):
             store.get_experiment("9999")
 
     def test_delete_experiment(self, store):
@@ -68,7 +68,7 @@ class TestRunOps:
         assert fetched.info.experiment_id == exp_id
 
     def test_get_nonexistent_run_raises(self, store):
-        with pytest.raises(MlflowException):
+        with pytest.raises(MlflowException, match="does not exist"):
             store.get_run("nonexistent_run_id")
 
     def test_log_metric_stored_in_atomspace(self, store):

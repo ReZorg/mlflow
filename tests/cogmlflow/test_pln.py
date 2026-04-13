@@ -3,7 +3,7 @@
 import pytest
 
 from mlflow.cogmlflow.entities.atomspace import AtomSpace
-from mlflow.cogmlflow.entities.ontology import CogMLflowOntology
+from mlflow.cogmlflow.entities.ontology import CogMlflowOntology
 from mlflow.cogmlflow.pln.engine import PLNEngine, TruthValue, conjunction, deduction, negation
 from mlflow.cogmlflow.pln.rules import (
     DataDriftRule,
@@ -17,7 +17,7 @@ from mlflow.cogmlflow.pln.rules import (
 @pytest.fixture
 def populated_space():
     space = AtomSpace()
-    onto = CogMLflowOntology(space)
+    onto = CogMlflowOntology(space)
     onto.add_experiment("exp1", "TestExp")
     onto.add_run("run_a", "exp1", status="FINISHED")
     onto.add_run("run_b", "exp1", status="FINISHED")

@@ -241,11 +241,11 @@ class AtomSpace:
     # Serialisation
     # ------------------------------------------------------------------
 
-    def to_dict(self) -> dict:
+    def to_dict(self) -> dict[str, object]:
         """Serialise the AtomSpace to a JSON-serialisable dict."""
 
-        def _atom_to_dict(a: Atom) -> dict:
-            d: dict = {
+        def _atom_to_dict(a: Atom) -> dict[str, object]:
+            d: dict[str, object] = {
                 "type": a.type,
                 "tv": {"strength": a.tv.strength, "confidence": a.tv.confidence},
                 "sti": a.sti,

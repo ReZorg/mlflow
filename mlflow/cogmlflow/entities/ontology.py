@@ -121,7 +121,7 @@ def bootstrap_ontology(atomspace: AtomSpace) -> None:
 # ---------------------------------------------------------------------------
 
 
-class CogMLflowOntology:
+class CogMlflowOntology:
     """Convenience class for building and querying CogMLflow Atoms.
 
     All methods are stateless helpers; they only require an AtomSpace
@@ -268,8 +268,7 @@ class CogMLflowOntology:
             step_node = self._as.add(NumberNode(float(step)))
             ev = self._as.add(EvaluationLink([pred, ListLink([run_node, val_node, step_node])]))
             atoms.append(ev)
-        seq = self._as.add(SequentialAndLink(atoms))
-        return seq
+        return self._as.add(SequentialAndLink(atoms))
 
     # -- Query helpers -------------------------------------------------------
 
